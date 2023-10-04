@@ -21,10 +21,10 @@ class VideoController extends Controller
     public function uploadChunk(Request $request)   {
         $videoChunk = $request->file('video_chunk');
         $originalFilename = $request->header('X-Original-Filename'); // Get the original filename from headers
-
+    
         // Validate and store the video chunk on disk
         $path = Storage::disk('local')->putFileAs('videos/chunks', $videoChunk, $originalFilename);
-
+    
         return response()->json(['message' => 'Video chunk uploaded successfully']);
     }
 }
