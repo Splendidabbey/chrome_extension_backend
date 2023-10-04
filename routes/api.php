@@ -14,6 +14,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::post('/upload-video', 'API\VideoController@upload');
+Route::post('/upload-video-chunk', 'API\VideoController@uploadChunk');
+
+
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
