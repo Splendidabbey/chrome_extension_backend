@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Storage;
 
 class VideoController extends Controller
 {
@@ -18,13 +19,21 @@ class VideoController extends Controller
         return response()->json(['message' => 'Video uploaded successfully']);
     }
 
-    public function uploadChunk(Request $request)   {
-        $videoChunk = $request->file('video_chunk');
-        $originalFilename = $request->header('X-Original-Filename'); // Get the original filename from headers
-    
-        // Validate and store the video chunk on disk
-        $path = Storage::disk('local')->putFileAs('videos/chunks', $videoChunk, $originalFilename);
-    
-        return response()->json(['message' => 'Video chunk uploaded successfully']);
+        public function uploadChunk(Request $request)   {
+            try {
+                $videoChunk = $request->file('video_chunk');
+                $originalFilename = $request->header('X-Original-Filename'); // Get the original filename from headers
+        
+                // Generate a unique filename for each chunk (e.g., using a UUID)
+                $uniqueFilename = uniqid().'.'.$videoChunk->getClientOriginalExtension();
+        
+                // Store the video chunk on disk in the 'videos/chunks' directory with the unique filename
+                $path = $videoChunk->storeAs('videos/chunks', $uniqueFilename);
+        
+                return response()->json(['message' => 'Video chunk uploaded successfully']);
+            } catch (\Exception $e) {
+                return response()->json(['error' => 'Error uploading chunk: ' . $e->getMessage()], 500);
+            }
     }
+    
 }
