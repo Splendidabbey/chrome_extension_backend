@@ -17,6 +17,7 @@ use App\Http\Controllers\API\VideoController;
 
 Route::post('/upload-video', [VideoController::class, 'upload']);
 Route::post('/upload-video-chunk', [VideoController::class, 'uploadChunk']);
+Route::get('/get-all-videos', [VideoController::class, 'getAllVideos']);
 
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
